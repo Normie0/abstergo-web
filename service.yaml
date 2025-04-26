@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: abstergo-web-service
+spec:
+  selector:
+    app: abstergo-web
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30232  # or some valid NodePort
+  type: NodePort
