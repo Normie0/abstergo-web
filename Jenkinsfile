@@ -46,7 +46,7 @@ pipeline {
             steps {
                 script {
                     // Deploy the Docker image to your production server (e.g., restart Docker container)
-                    sh 'docker run -d -p 8080:80 ${DOCKER_IMAGE}'
+                    sh 'docker run -d -p 9090:90 ${DOCKER_IMAGE}'
                 }
             }
         }
