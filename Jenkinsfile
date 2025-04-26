@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        DOCKER_IMAGE = 'abstergo-web'
+        DOCKER_IMAGE = 'ashishdocker02/abstergo-web' // Updated image name with your username
         DOCKER_HUB_USERNAME = 'ashishdocker02'
         DOCKER_HUB_PASSWORD = 'Ashish02304'
     }
