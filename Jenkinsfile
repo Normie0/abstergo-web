@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKER_USERNAME = 'ashishdocker02'
         DOCKER_PASSWORD = 'Ashish02304'
+        KUBECONFIG = '/Users/ashishsingh/.kube/config'  // Set KUBECONFIG path
     }
 
     stages {
@@ -34,11 +35,15 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                echo 'Deploying to Kubernetes'
-                // Add your Kubernetes deployment steps here
+                script {
+                    echo 'Deploying to Kubernetes'
+                    // Add your Kubernetes deployment steps here
+                    sh 'kubectl apply -f deployment.yaml'  // Example of applying a deployment file
+                }
             }
         }
     }
+
     post {
         failure {
             echo 'The build or deployment failed!'
