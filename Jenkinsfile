@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'abstergo-web'
         DOCKER_HUB_USERNAME = 'ashishdocker02'
-        DOCKER_HUB_PASSWORD = '@Ashish02304'
+        DOCKER_HUB_PASSWORD = 'Ashish02304'
     }
 
     stages {
