@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_USERNAME = 'ashishdocker02'
-        DOCKERHUB_PASSWORD = 'Ashish02304'
+        DOCKER_USERNAME = 'ashishdocker02'
+        DOCKER_PASSWORD = 'Ashish02304'
     }
 
     stages {
@@ -24,12 +24,10 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: '', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh """
-                            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-                            docker push ashishdocker02/abstergo-web:latest
-                        """
-                    }
+                    sh """
+                        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                        docker push ashishdocker02/abstergo-web:latest
+                    """
                 }
             }
         }
