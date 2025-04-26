@@ -2,19 +2,13 @@ pipeline {
     agent any
 
     environment {
-        // Define environment variables
-        DOCKER_IMAGE = "ashishdocker02/abstergo-web"
-        DOCKER_TAG = "latest"
-        KUBE_CONFIG = "/home/jenkins/.kube/config" // Update if necessary
-        KUBERNETES_NAMESPACE = "default"
-        DOCKERHUB_CREDENTIALS = "dockerhub-credentials" // Update your Docker Hub credentials ID
-        KUBE_CREDENTIALS = "kube-credentials" // Update your Kubernetes credentials ID
+        DOCKERHUB_USERNAME = 'ashishdocker02'
+        DOCKERHUB_PASSWORD = 'Ashish02304'
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout SCM') {
             steps {
-                // Checkout the code from GitHub
                 checkout scm
             }
         }
@@ -22,10 +16,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build the Docker image
-                    sh """
-                    docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
-                    """
+                    sh 'docker build -t ashishdocker02/abstergo-web:latest .'
                 }
             }
         }
@@ -33,11 +24,10 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    // Log in to Docker Hub
-                    withCredentials([usernamePassword(credentialsId: DOCKERHUB_CREDENTIALS, usernameVariable: 'ashishdocker02', passwordVariable: 'Ashish02304')]) {
+                    withCredentials([usernamePassword(credentialsId: '', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh """
-                        echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
-                        docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+                            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                            docker push ashishdocker02/abstergo-web:latest
                         """
                     }
                 }
@@ -46,24 +36,12 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                script {
-                    // Deploy the new image to Kubernetes
-                    withCredentials([file(credentialsId: KUBE_CREDENTIALS, variable: 'KUBE_CONFIG')]) {
-                        sh """
-                        export KUBECONFIG=${KUBE_CONFIG}
-                        kubectl set image deployment/abstergo-web abstergo-web=${DOCKER_IMAGE}:${DOCKER_TAG} --namespace=${KUBERNETES_NAMESPACE}
-                        kubectl rollout restart deployment/abstergo-web --namespace=${KUBERNETES_NAMESPACE}
-                        """
-                    }
-                }
+                echo 'Deploying to Kubernetes'
+                // Add your Kubernetes deployment steps here
             }
         }
     }
-
     post {
-        success {
-            echo 'The build was successful and deployment is complete!'
-        }
         failure {
             echo 'The build or deployment failed!'
         }
