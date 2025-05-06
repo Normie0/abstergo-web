@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: abstergo-blue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: abstergo-blue
+  template:
+    metadata:
+      labels:
+        app: abstergo-blue
+    spec:
+      containers:
+        - name: abstergo-web
+          image: ashishdocker02/abstergo-web:latest
+          ports:
+            - containerPort: 80

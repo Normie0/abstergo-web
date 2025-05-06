@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_USERNAME = 'ashishdocker02'
         DOCKER_PASSWORD = 'Ashish02304'
-        KUBECONFIG = '/Users/ashishsingh/.kube/config'  // Set KUBECONFIG path
+        KUBECONFIG = '/Users/ashishsingh/.kube/config'
     }
 
     stages {
@@ -33,12 +33,27 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
+        stage('Blue-Green Deploy to Kubernetes') {
             steps {
                 script {
-                    echo 'Deploying to Kubernetes'
-                    // Add your Kubernetes deployment steps here
-                    sh 'kubectl apply -f deployment.yaml'  // Example of applying a deployment file
+                    echo 'Starting Blue-Green Deployment'
+
+                    def currentApp = sh(
+                        script: "kubectl get svc abstergo-web-service -o=jsonpath='{.spec.selector.app}'",
+                        returnStdout: true
+                    ).trim().replaceAll("'", "")
+                    
+                    def newApp = (currentApp == "abstergo-blue") ? "abstergo-green" : "abstergo-blue"
+                    
+                    echo "Deploying new version to $newApp"
+
+                    // Deploy new version to alternate app
+                    sh "kubectl apply -f deployment-${newApp}.yaml"
+
+                    // Switch traffic to the new version
+                    sh "kubectl patch svc abstergo-web-service -p '{\"spec\": {\"selector\": {\"app\": \"${newApp}\"}}}'"
+
+                    echo "Traffic switched to $newApp"
                 }
             }
         }
