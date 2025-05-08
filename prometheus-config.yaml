@@ -12,4 +12,4 @@ data:
       - job_name: 'jenkins'
         metrics_path: /prometheus
         static_configs:
-          - targets: ['127.0.0.1:8080']
+          - targets: ['host.docker.internal:8081']
